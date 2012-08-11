@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="css/reset.css"/>
+    <link rel="stylesheet" href="css/twod.css"/>
+
+    <script src='js/libs/jquery-1.7.js' type="text/javascript"></script>
+    <script src='js/libs/jquery.create.js' type="text/javascript"></script>
+    <script src='js/libs/modernizr-2.0.6.min.js' type="text/javascript"></script>
+    <script src='js/libs/underscore.js' type="text/javascript"></script>
+    <script src='js/libs/swfobject.js' type="text/javascript"></script>
+    <script src='js/libs/RequestAnimationFrame.js' type="text/javascript"></script>
+    <script src='js/libs/Stats.js' type="text/javascript"></script>
+
+    <script src='js/libs/gl-matrix.js' type="text/javascript"></script>
+    <script src='js/libs/webgl-debug.js' type="text/javascript"></script>
+    <script src='js/libs/GLU.js' type="text/javascript"></script>
+
+    <script src='../src/twod.js' type="text/javascript"></script>
+    <title>test</title>
+</head>
+<body>
+
+    <div class="twod">
+    </div>
+
+<script>
+
+
+    $(document).ready(function()
+    {
+
+        var twodWidth = 1024;
+        var twodHeight = 1024;
+        var twodScaling = 1;
+        var $twod = $('.twod');
+        $twod.css({width: twodWidth*twodScaling, height: twodHeight*twodScaling});
+        var twodStage = new twod.Stage();
+        twodStage.init($twod, {
+            mode: 'webgl',
+            width: twodWidth,
+            height: twodHeight,
+            scaling: twodScaling
+        });
+        var twodContext = twodStage.renderContext;
+        var twodContainer = twodStage.container;
+
+        var assetsLoaded = false;
+        var title = "atlas: "+twodStage.priorityMode;
+        document.title = title;
+
+
+        this.font = new twod.Font(twodContext, 'assets/fixed_01');
+        this.textField = new twod.TextField(this.font);
+        this.textField.setText(title);
+        this.textField.setRecolor(0x000000ff, 0x80ff00ff);
+        twodContainer.addChild(this.textField);
+        twodContext.drawAtlas = true;
+
+        assetsLoaded = true;
+
+        var testImages = {};
+        var nextID = 0;
+
+        var tick = function(){
+            requestAnimationFrame(tick);
+
+            if(assetsLoaded){
+
+                var oldTarget = twodContext.getDrawTarget();
+                var removeIDs = [];
+                for(var s in testImages){
+                    if(Math.random() < 0.1){
+                        removeIDs.push(s);
+                    }
+                }
+                for(var i = 0; i < removeIDs.length; ++i){
+                    var id = removeIDs[i];
+                    var image = testImages[id];
+                    twodContext.setDrawTarget(image);
+                    twodContext.clear();
+                    twodContext.freeImage(image);
+                    delete testImages[id];
+                }
+
+                //generate some random images. mostly multiple of 16, but a few oddballs, and mostly small but some big ones
+                for(var i = 0; i < 32; ++i){
+                    var w;
+                    var h;
+                    if(Math.random() < 0.1){
+                        w = Math.random();
+                        w = w*w*255+1;
+                        h = Math.random();
+                        h = h*h*255+1;
+                    } else {
+                        w = Math.random();
+                        w = Math.floor(w*w*w*w*15)+1;
+                        w = w*16;
+                        h = Math.random();
+                        h = Math.floor(h*h*h*h*15)+1;
+                        h = h*16;
+                    }
+
+                    try{
+                        var newImage = twodContext.createImage(w|0, h|0);
+                        twodContext.setDrawTarget(newImage);
+                        twodContext.drawColorMap(newImage, [0x00000000], [(0xffffffff*Math.random())|0]);
+                        testImages[++nextID] = newImage;
+                    } catch(e){
+                        console.log(e.message);
+                        console.log(e.stack);
+                        assetsLoaded = false;
+                        break;
+                    }
+                }
+                twodContext.setDrawTarget(oldTarget);
+
+
+                twodContext.clear();
+                twodContainer.draw(twodContext);
+
+            }
+            twodContext.flush();
+        };
+
+        tick();
+
+
+    });
+
+</script>
+
+</body>
+</html>
+

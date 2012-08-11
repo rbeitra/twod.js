@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<div id='output'>
+</div>
+<script>
+
+    function addLink(url){
+        var container = document.getElementById('output');
+        container.innerHTML += '<div><a href="'+url+'">'+url+'</a></div>'
+    }
+
+    addLink('test.html');
+    addLink('datauri.html');
+    addLink('mode7.html');
+    addLink('atlas.html');
+
+</script>
+
+</body>
+</html>
+

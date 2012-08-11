@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="css/reset.css"/>
+    <link rel="stylesheet" href="css/twod.css"/>
+
+    <script src='js/libs/jquery-1.7.js' type="text/javascript"></script>
+    <script src='js/libs/jquery.create.js' type="text/javascript"></script>
+    <script src='js/libs/modernizr-2.0.6.min.js' type="text/javascript"></script>
+    <script src='js/libs/underscore.js' type="text/javascript"></script>
+    <script src='js/libs/swfobject.js' type="text/javascript"></script>
+    <script src='js/libs/RequestAnimationFrame.js' type="text/javascript"></script>
+    <script src='js/libs/Stats.js' type="text/javascript"></script>
+
+    <script src='js/libs/gl-matrix.js' type="text/javascript"></script>
+    <script src='js/libs/webgl-debug.js' type="text/javascript"></script>
+    <script src='js/libs/GLU.js' type="text/javascript"></script>
+
+    <script src='../src/twod.js' type="text/javascript"></script>
+    <title>test</title>
+</head>
+<body>
+
+    <div class="twod">
+    </div>
+
+<script>
+
+
+    $(document).ready(function()
+    {
+
+        var KeyManager = function(){
+            this._down = {};
+            this._downDelegate = _.bind(this.onKeyDown, this);
+            this._upDelegate = _.bind(this.onKeyUp, this);
+        };
+        KeyManager.prototype = {
+            _down: null,
+            keys: {
+                LEFT: 37,
+                UP: 38,
+                RIGHT: 39,
+                DOWN: 40,
+                SPACE: 32
+            },
+            isDown: function(keyCode){
+                return this._down[keyCode];
+            },
+            isCharDown: function(char){
+                return this._down[char.toUpperCase().charCodeAt(0)];
+            },
+            onKeyDown: function(event){
+                this._down[event.keyCode] = true;
+            },
+            onKeyUp: function(event){
+                this._down[event.keyCode] = false;
+            },
+            enable: function(){
+                $(window).bind('keydown', this._downDelegate);
+                $(window).bind('keyup', this._upDelegate);
+            },
+            disable: function(){
+                $(window).unbind('keydown', this._downDelegate);
+                $(window).unbind('keyup', this._upDelegate);
+            },
+            getArrowsVector: function(vec){
+                vec = vec || vec2.create();;
+                var dx = 0;
+                var dy = 0;
+                if(this.isDown(this.keys.LEFT)){
+                    dx -= 1;
+                }
+                if(this.isDown(this.keys.RIGHT)){
+                    dx += 1;
+                }
+                if(this.isDown(this.keys.UP)){
+                    dy -= 1;
+                }
+                if(this.isDown(this.keys.DOWN)){
+                    dy += 1;
+                }
+                vec[0] = dx;
+                vec[1] = dy;
+                return vec;
+            }
+        };
+        var keyManager = new KeyManager();
+        keyManager.enable();
+
+
+        function getURLParameter(name) {
+            return decodeURIComponent((RegExp('[?|&]' + name + '=' + '(.+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+        }
+
+        var mode = getURLParameter('mode') || 'auto';
+
+
+        var twodWidth = 256;
+        var twodHeight = 192;
+        var twodScaling = 2;
+        var $twod = $('.twod');
+        $twod.css({width: twodWidth*twodScaling, height: twodHeight*twodScaling});
+        var twodStage = new twod.Stage();
+        twodStage.init($twod, {
+            mode: mode,
+            width: twodWidth,
+            height: twodHeight,
+            scaling: twodScaling,
+            swfURL: "../bin/twod.swf"
+        });
+        var twodContext = twodStage.renderContext;
+        var twodContainer = twodStage.container;
+        var scanLineTarget;
+
+        var images = {};
+        var colorImages = [];
+        var tileWidth = 1;
+        var tileHeight = 2;
+        images.empty = twodContext.createImage(tileWidth, tileHeight);
+        images.map = twodContext.createImage(256,256);
+        var tileCols = images.map.getWidth()/tileWidth;
+        var tileRows = images.map.getHeight()/tileHeight;
+        var assetsLoaded = false;
+        var title = "mode7: "+twodStage.priorityMode;
+        document.title = title;
+        var colors = {
+            red: 0xff0000ff,
+            green: 0x00ff00ff,
+            blue: 0x0000ffff,
+            cyan: 0x00ffffff,
+            magenta: 0xff00ffff,
+            yellow: 0xffff00ff,
+            black: 0x000000ff
+        };
+        var oldTarget = twodContext.getDrawTarget();
+        _.each(colors, function(color, colorName){
+            var colorImage = twodContext.createImage(images.empty.getWidth(), images.empty.getHeight());
+            twodContext.setDrawTarget(colorImage);
+            twodContext.clear();
+
+            twodContext.drawColorMap(images.empty, [0x00000000], [color]);
+            images[colorName] = colorImage;
+            colorImages.push(colorImage);
+        });
+
+        twodContext.setDrawTarget(images.map);
+        twodContext.drawTexture(images.black, 0, 0, images.map.getWidth(), images.map.getHeight(), 0, 0)
+
+        twodContext.setDrawTarget(oldTarget);
+
+        var startTime = new Date().getTime();
+
+        scanLineTarget = twodContext.createImage(twodStage.getWidth(), twodStage.getHeight());
+
+        this.font = new twod.Font(twodContext, 'assets/fixed_01');
+        this.textField = new twod.TextField(this.font);
+        this.textField.setText(title);
+        this.textField.setRecolor(0x000000ff, 0x80ff00ff);
+        twodContainer.addChild(this.textField);
+
+        assetsLoaded = true;
+
+        var posX = 32;
+        var posY = 32;
+        var posZ = 0;
+        var velZ = -1;
+        var theta = Math.PI;
+        var lastTick = 0;
+        var tick = function(){
+            requestAnimationFrame(tick);
+
+            if(assetsLoaded){
+                var now = new Date().getTime()*0.001;
+                var delta = now - lastTick;
+                lastTick = now;
+
+                twodContext.clear();
+
+                var oldTarget = twodContext.getDrawTarget();
+                twodContext.setDrawTarget(images.map);
+                for(var i = 0; i < 16; ++i){
+                    var r = Math.floor(Math.random()*colorImages.length);
+                    var colorImage = colorImages[r];
+                    var x = Math.floor((now*16)%tileCols)*tileWidth;
+                    var y = Math.floor(Math.random()*tileRows)*tileHeight;
+                    twodContext.drawImage(colorImage, x, y);
+                }
+                for(var i = 0; i < 256; ++i){
+                    var r = Math.floor(Math.random()*colorImages.length);
+                    var x = Math.floor(Math.random()*tileCols)*tileWidth;
+                    var y = Math.floor(Math.random()*tileRows)*tileHeight;
+                    twodContext.drawImage(images.black, x, y);
+                }
+                twodContext.setDrawTarget(oldTarget);
+
+
+                var delta = keyManager.getArrowsVector();
+
+                theta += delta[0]*0.02;
+
+                var speed = delta[1]*2;
+                posX -= speed*Math.sin(theta);
+                posY -= speed*Math.cos(theta);
+
+                if(keyManager.isDown(keyManager.keys.SPACE)){
+                    if(posZ == 0){
+                        velZ = 1;
+                    }
+                }
+                velZ -= 0.02;
+                if(velZ < -1){
+                    velZ = -1;
+                }
+                posZ += velZ;
+                if(posZ < 0){
+                    posZ = 0;
+                }
+
+                twodContext.setDrawTarget(scanLineTarget);
+                twodContext.clear();
+                var scanLineImage = images.map;
+                var cols = scanLineTarget.getWidth();
+                var rows = scanLineTarget.getHeight();
+                var scanMatrix = mat2d.create();
+                var pointLeft = vec2.create([-0.5*cols, 0]);
+                var pointRight = vec2.create([0.5*cols, 0]);
+                var transformedPointLeft = vec2.create();
+                var transformedPointRight = vec2.create();
+
+                var height = 30+posZ*16;
+                var data = [];
+                for(var i = 0; i < rows; ++i){
+                    var tilt = 0.01 + (i/rows)*0.3;
+                    var distance = height/Math.tan(tilt);
+
+                    var spread = height/Math.sin(tilt)*0.005;
+
+                    mat2d.identity(scanMatrix);
+
+                    mat2d.scale(scanMatrix, [spread, spread]);
+                    mat2d.translate(scanMatrix, [0, distance]);
+                    mat2d.rotate(scanMatrix, theta);
+                    mat2d.scale(scanMatrix, [0.1, 0.1]);
+
+                    mat2d.translate(scanMatrix, [posX, posY]);
+
+                    mat2d.multiplyVec2(scanMatrix, pointLeft, transformedPointLeft);
+                    mat2d.multiplyVec2(scanMatrix, pointRight, transformedPointRight);
+                    twodStage.renderContext.drawScanline(scanLineImage, i, transformedPointLeft[0], transformedPointLeft[1], transformedPointRight[0], transformedPointRight[1]);
+                }
+
+                twodContext.setDrawTarget(oldTarget);
+                twodContext.drawImage(scanLineTarget, 0, 0);
+                twodContainer.draw(twodStage.renderContext);
+            }
+            twodContext.flush();
+        };
+
+        tick();
+
+
+    });
+
+</script>
+
+</body>
+</html>
+
