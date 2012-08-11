@@ -2703,7 +2703,7 @@
                 this.uColorMapTarget = new GLU.Uniform(gl, 'uColorMapTarget', '4fv', {color: new Float32Array([1.0, 0.0, 1.0, 1.0])});
 
 
-                this.atlasFBO = new GLU.FrameBuffer(gl);
+                this.atlasFBO = new GLU.Framebuffer(gl);
                 this.atlasFBO.setSize(this.imageCache.atlas.width, this.imageCache.atlas.height);
                 this.atlasTexture = this.atlasFBO.texture;
                 this.atlasMaterial = new GLU.Material(gl, this.atlasProgram, {uDrawCommands: this.drawCommandsTexture, uAtlas: this.atlasDataTexture, uSampler: this.atlasTexture});
@@ -2713,7 +2713,7 @@
                 this.atlasObject = new GLU.Object(gl, this.atlasGeometry, this.atlasMaterial, [this.uMVMatrix, this.uPMatrix, this.uColorMapSource, this.uColorMapTarget]);//, this.uScale, this.uTranslate
 
 
-                this.copyFBO = new GLU.FrameBuffer(gl);
+                this.copyFBO = new GLU.Framebuffer(gl);
                 this.copyFBO.setSize(256, 256);
                 this.copyCanvas = twod.ImageUtil.createCanvas();
                 this.copyCanvasContext = this.copyCanvas.getContext('2d');
@@ -2752,7 +2752,8 @@
 
             } catch (e){
                 //there was an error preparing!
-                console.log(e);
+//                console.log(e);
+//                console.log(e.stack);
                 success = false;
             }
 
