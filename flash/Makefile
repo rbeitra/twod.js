@@ -1,4 +1,9 @@
-FLEX := $(wildcard /Applications/flex_sdk_4.5.1.21328 /opt/flex-sdk)
+# Get first defined flex-sdk location, in order preference given
+FLEX := $(wordlist 1,1,$(wildcard 		\
+	/Applications/flex_sdk_4.5.1.21328  \
+	/Applications/flex_sdk*  \
+	/opt/flex-sdk))
+
 AMXMLC := ${FLEX}/bin/amxmlc
 MXMLC := ${FLEX}/bin/mxmlc
 LOCALE := en_US
@@ -24,7 +29,12 @@ PROGFLAGS := -library-path+=${PROGLIB} -source-path+=${PROGSRC} -source-path+=${
 
 DEPLOY := cp -rf ${PROGBUILD}/* ${PROGDEPLOY}
 
+ifdef FLEX
 default: all
+else
+default:
+	@echo Flex not available, skipping flash build
+endif
 
 .PHONY: all flash install
 
