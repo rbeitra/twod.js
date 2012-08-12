@@ -1,2 +1,4 @@
 .DS_Store
-flash/build/twod.swf
+/flash/build/twod.swf
+/node_modules
+/lib
