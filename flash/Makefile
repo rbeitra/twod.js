@@ -1,4 +1,4 @@
-FLEX := /Applications/flex_sdk_4.5.1.21328
+FLEX := $(wildcard /Applications/flex_sdk_4.5.1.21328 /opt/flex-sdk)
 AMXMLC := ${FLEX}/bin/amxmlc
 MXMLC := ${FLEX}/bin/mxmlc
 LOCALE := en_US
