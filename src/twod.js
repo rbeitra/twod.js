@@ -5,6 +5,7 @@
     }
     var document = scope.document;
     var _ = loadModule(scope._, 'underscore');
+    var $ = loadModule(scope.$, 'jquery');
     var Canvas = loadModule(scope.HTMLCanvasElement, 'Canvas');//only needed serverside
     var Image = scope.Image || Canvas.Image;
 
