@@ -490,7 +490,7 @@
     twod.ImageLoader.loadImages = function(srcs, callback, rootURL){
         var loader = new twod.ImageLoader();
         loader.loadImages(srcs, callback, rootURL);
-    }
+    };
     twod.ImageLoader.prototype = {
         loadImages: function(srcs, callback, rootURL){
             this.callback = callback;
@@ -502,7 +502,7 @@
                 loaders[src] = new Image();
                 loaders[src].onload = function(){
                     that.imageLoaded(src);
-                }
+                };
             });
             //start them loading
             _.each(loaders, function(loader, src){
@@ -692,7 +692,7 @@
                     }
                 }
             }
-            if(currentLine != ""){
+            if(currentLine !== ""){
                 lines.push(currentLine);
             }
             text = lines.join("\n");
@@ -773,7 +773,7 @@
             var alignmentOffset = 0;
             for(var i = 0; i < length; ++i){
                 var chr = text.charAt(i);
-                if(x == 0){
+                if(x === 0){
                     if(alignment == "left"){
                         alignmentOffset = 0;
                     } else {
@@ -892,7 +892,7 @@
         removeChild: function(child){
             if(child._parent === this){
                 child._parent = null;
-                this.children = _.filter(this.children, function(c){return c !== child});
+                this.children = _.filter(this.children, function(c){return c !== child;});
             }
         },
         children: null,
@@ -1045,28 +1045,28 @@
     twod.RenderContext.mixin = {
 
         //IMMEDIATE MODE OPERATIONS. THESE HAVE IMMEDIATE EFFECT AND DO NOT RETURN ANY VALUE.
-        clear: function(){console.log('clear() not implemented')},//clear the context for redrawing
-        save: function(){console.log('save() not implemented')},//save the current transformstate
-        restore: function(){console.log('restore() not implemented')},//restore previous transform state
-        translate: function(x, y){console.log('translate() not implemented')},//translate coordinates
-        identity: function(x, y){console.log('identity() not implemented')},//reset translation
-        setDrawTarget: function(image){console.log('setDrawTarget() not implemented')},//sets current drawing target(or main output if image==null
-        drawImage: function(image, x, y){console.log('drawImage() not implemented')},//draw an image
-        drawTexture: function(image, x, y, w, h, ox, oy){console.log('drawTexture() not implemented')},//draw a textured rectangle
-        drawColorMap: function(image, sourceRGBAs, targetRGBAs){console.log('drawColorMap() not implemented')},//draw image with selected colors remapped. no translation
-        drawAffine: function(image, matrix){console.log('drawAffine() not implemented')},//draw an image with an affine transform.
-        drawScanline: function(image, y, sx1, sy1, sx2, sy2){console.log('drawScanline() not implemented')},//draw a scan line.
+        clear: function(){console.log('clear() not implemented');},//clear the context for redrawing
+        save: function(){console.log('save() not implemented');},//save the current transformstate
+        restore: function(){console.log('restore() not implemented');},//restore previous transform state
+        translate: function(x, y){console.log('translate() not implemented');},//translate coordinates
+        identity: function(x, y){console.log('identity() not implemented');},//reset translation
+        setDrawTarget: function(image){console.log('setDrawTarget() not implemented');},//sets current drawing target(or main output if image==null
+        drawImage: function(image, x, y){console.log('drawImage() not implemented');},//draw an image
+        drawTexture: function(image, x, y, w, h, ox, oy){console.log('drawTexture() not implemented');},//draw a textured rectangle
+        drawColorMap: function(image, sourceRGBAs, targetRGBAs){console.log('drawColorMap() not implemented');},//draw image with selected colors remapped. no translation
+        drawAffine: function(image, matrix){console.log('drawAffine() not implemented');},//draw an image with an affine transform.
+        drawScanline: function(image, y, sx1, sy1, sx2, sy2){console.log('drawScanline() not implemented');},//draw a scan line.
 //        drawScanlines: function(image, data){console.log('drawScanline() not implemented')},//draw a scan line. data is an interleaved array of x,y,w,sx1,sy1,sx2,sy2
 //        drawAffineTexture: function(image, x, y, w, h, a, b, c, d, tx, ty){},//draw a texture with an affine transform. for mode7 etc
-        freeImage: function(image){console.log('freeImage() not implemented')},//forget this image, perhaps free up the memory for later use
+        freeImage: function(image){console.log('freeImage() not implemented');},//forget this image, perhaps free up the memory for later use
 
-        getDrawTarget: function(){console.log('getDrawTarget() not implemented')},//gets current drawing target(or null if main output)
-        flush: function(){console.log('flush() not implemented')},//flush the current buffer
+        getDrawTarget: function(){console.log('getDrawTarget() not implemented');},//gets current drawing target(or null if main output)
+        flush: function(){console.log('flush() not implemented');},//flush the current buffer
 
 
         //ASYNCHRONOUS OPERATIONS. THESE DO NOT NECESSARILY HAVE IMMEDATE EFFECT. USE CALLBACKS TO DETECT COMPLETION
-        createImage: function(width, height){console.log('createImage() not implemented')},//creates a new empty image with this size
-        loadImage: function(image, url, rectangle, onComplete){console.log('loadImage() not implemented')},//loads rectangle subimage from a url into supplied image asynchronously
+        createImage: function(width, height){console.log('createImage() not implemented');},//creates a new empty image with this size
+        loadImage: function(image, url, rectangle, onComplete){console.log('loadImage() not implemented');},//loads rectangle subimage from a url into supplied image asynchronously
         loadFrames: function(json, rootURL, onComplete){
             rootURL = rootURL || '';
 
@@ -1243,7 +1243,7 @@
         setScaling: function(scaling){},
         setWidth: function(width){},
         setHeight: function(height){}
-    }
+    };
     twod.RenderContext.prototype = twod.RenderContext.mixin;
 
 
@@ -1293,7 +1293,7 @@
                 if($el){
                     bgDiv = this.createDiv($el, 'twodBGDiv');
 
-                    canvas = this.createCanvas($el, 'twodCanvas')
+                    canvas = this.createCanvas($el, 'twodCanvas');
                 } else {
                     canvas = twod.ImageUtil.createCanvas();
                 }
@@ -2267,7 +2267,7 @@
             }
 //            this.encodeFloat = this.encodeFloatLong;
         }
-        this.valueDiv = precision
+        this.valueDiv = precision;
         this.valueMul = 1/this.valueDiv;
         this.valueRange = maxI*this.valueDiv;
         this.minValue = minValue;
@@ -2442,7 +2442,7 @@
 
     twod.WebGLContext = function(){
         twod.BufferedContext.apply(this);
-    }
+    };
     twod.WebGLContext.hasWebGL = function(){
 //        return false;
         try {
@@ -2505,7 +2505,7 @@
 //            console.log(e);
         }
         return false;//some requirement was not met. no webgl. sorry
-    }
+    };
     twod.WebGLContext.mixin = {
         init: function($el, options){
             var success = false;
@@ -2664,13 +2664,15 @@
                 "}\n";
 
 
-                this.initGL(this.canvas);
+                // this.initGL(this.canvas);
+                var glu = this.glu = new GLU.Context();
+                glu.initGL(this.canvas);
+                this.gl = glu.gl;
                 var gl = this.gl;
                 this.updateSize();
 
-                this.atlasProgram = new GLU.Program(
-                    gl,
-                    [new GLU.Shader(gl, null, fragmentShader, false), new GLU.Shader(gl, null, vertexShader, true)],//shaders
+                this.atlasProgram = glu.Program(
+                    [glu.Shader(null, fragmentShader, false), glu.Shader(null, vertexShader, true)],//shaders
                     ['aVertexPosition', 'aTextureCoord', 'aID'],//attributes
                     ['uMVMatrix', 'uPMatrix', 'uColorMapSource', 'uColorMapTarget', 'uDrawCommands', 'uAtlas', 'uSampler']//uniforms//'uScale', 'uTranslate',
                 );
@@ -2678,17 +2680,15 @@
 
 
 
-                this.copyProgram = new GLU.Program(
-                    gl,
-                    [new GLU.Shader(gl, null, copyFShader, false), new GLU.Shader(gl, null, copyVShader, true)],//shaders
+                this.copyProgram = glu.Program(
+                    [glu.Shader(null, copyFShader, false), glu.Shader(null, copyVShader, true)],//shaders
                     ['aVertexPosition', 'aTextureCoord'],//attributes
                     ['uMVMatrix', 'uPMatrix', 'uSampler']//uniforms
                 );
                 this.copyProgram.unbind();
 
-                this.debugProgram = new GLU.Program(
-                    gl,
-                    [new GLU.Shader(gl, null, copyFShader, false), new GLU.Shader(gl, null, copyVShader, true)],//shaders
+                this.debugProgram = glu.Program(
+                    [glu.Shader(null, copyFShader, false), glu.Shader(null, copyVShader, true)],//shaders
                     ['aVertexPosition', 'aTextureCoord'],//attributes
                     ['uMVMatrix', 'uPMatrix', 'uSampler']//uniforms
                 );
@@ -2698,44 +2698,44 @@
                 this.initBuffers();
                 this.initCopyPlane();
 
-                this.uMVMatrix = new GLU.Uniform(gl, 'uMVMatrix', 'Matrix4fv', {matrix: this.mvMatrix, transpose: false}, ['transpose', 'matrix']);
-                this.uPMatrix = new GLU.Uniform(gl, 'uPMatrix', 'Matrix4fv', {matrix: this.pMatrix, transpose: false}, ['transpose', 'matrix']);
-                this.uColorMapSource = new GLU.Uniform(gl, 'uColorMapSource', '4fv', {color: new Float32Array([1.0, 1.0, 1.0, 1.0])});
-                this.uColorMapTarget = new GLU.Uniform(gl, 'uColorMapTarget', '4fv', {color: new Float32Array([1.0, 0.0, 1.0, 1.0])});
+                this.uMVMatrix = glu.Uniform('uMVMatrix', 'Matrix4fv', {matrix: this.mvMatrix, transpose: false}, ['transpose', 'matrix']);
+                this.uPMatrix = glu.Uniform('uPMatrix', 'Matrix4fv', {matrix: this.pMatrix, transpose: false}, ['transpose', 'matrix']);
+                this.uColorMapSource = glu.Uniform('uColorMapSource', '4fv', {color: new Float32Array([1.0, 1.0, 1.0, 1.0])});
+                this.uColorMapTarget = glu.Uniform('uColorMapTarget', '4fv', {color: new Float32Array([1.0, 0.0, 1.0, 1.0])});
 
 
-                this.atlasFBO = new GLU.Framebuffer(gl);
+                this.atlasFBO = glu.Framebuffer();
                 this.atlasFBO.setSize(this.imageCache.atlas.width, this.imageCache.atlas.height);
                 this.atlasTexture = this.atlasFBO.texture;
-                this.atlasMaterial = new GLU.Material(gl, this.atlasProgram, {uDrawCommands: this.drawCommandsTexture, uAtlas: this.atlasDataTexture, uSampler: this.atlasTexture});
+                this.atlasMaterial = glu.Material(this.atlasProgram, {uDrawCommands: this.drawCommandsTexture, uAtlas: this.atlasDataTexture, uSampler: this.atlasTexture});
                 this.atlasMaterial.blendFunction = this.atlasMaterial.blendingParticles;
 
 
-                this.atlasObject = new GLU.Object(gl, this.atlasGeometry, this.atlasMaterial, [this.uMVMatrix, this.uPMatrix, this.uColorMapSource, this.uColorMapTarget]);//, this.uScale, this.uTranslate
+                this.atlasObject = glu.Object(this.atlasGeometry, this.atlasMaterial, [this.uMVMatrix, this.uPMatrix, this.uColorMapSource, this.uColorMapTarget]);//, this.uScale, this.uTranslate
 
 
-                this.copyFBO = new GLU.Framebuffer(gl);
+                this.copyFBO = glu.Framebuffer();
                 this.copyFBO.setSize(256, 256);
                 this.copyCanvas = twod.ImageUtil.createCanvas();
                 this.copyCanvasContext = this.copyCanvas.getContext('2d');
                 this.copyCanvas.width = this.copyFBO.texture.width;
                 this.copyCanvas.height = this.copyFBO.texture.height;
                 this.copyFBO.texture.setImage(this.copyCanvas);
-                this.copyMaterial = new GLU.Material(gl, this.copyProgram, {uSampler: this.copyFBO.texture});
+                this.copyMaterial = glu.Material(this.copyProgram, {uSampler: this.copyFBO.texture});
                 this.copyMaterial.blendFunction = function(){
                     this.gl.disable(this.gl.BLEND);
                     this.gl.disable(this.gl.DEPTH_TEST);
 //                this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
                     this.gl.disable(this.gl.CULL_FACE);
-                }
-                this.copyObject = new GLU.Object(gl, this.copyGeometry, this.copyMaterial, [this.uMVMatrix, this.uPMatrix]);
+                };
+                this.copyObject = glu.Object(this.copyGeometry, this.copyMaterial, [this.uMVMatrix, this.uPMatrix]);
 
 
-                this.debugMaterial = new GLU.Material(gl, this.debugProgram, {uSampler: this.atlasFBO.texture});
+                this.debugMaterial = glu.Material(this.debugProgram, {uSampler: this.atlasFBO.texture});
                 this.debugMaterial.blendFunction = this.debugMaterial.blendingParticles;
-                this.debugGeometry = new GLU.Geometry(gl);
+                this.debugGeometry = glu.Geometry();
                 this.debugGeometry.makeRect(64, 64, null, 'aVertexPosition', 'aTextureCoord');
-                this.debugObject = new GLU.Object(gl, this.debugGeometry, this.debugMaterial, [this.uMVMatrix, this.uPMatrix]);
+                this.debugObject = glu.Object(this.debugGeometry, this.debugMaterial, [this.uMVMatrix, this.uPMatrix]);
 
 
 
@@ -2743,18 +2743,18 @@
 
                 var checkRunning = this.checkRunningStatus();
                 if(!checkRunning){
-                    throw{
+                    throw {
                         name: "WebGLRendererError",
                         message: "WebGL is initialised but drawing is not working somehow"
-                    }
+                    };
                 }
 
                 success = true;
 
             } catch (e){
                 //there was an error preparing!
-//                console.log(e);
-//                console.log(e.stack);
+               console.log(e);
+               console.log(e.stack);
                 success = false;
             }
 
@@ -2767,9 +2767,10 @@
 
         },
         initGL: function (canvas) {
+            var gl;
             try {
-                var gl = canvas.getContext("experimental-webgl", {antialias: false, preserveDrawingBuffer: true});
-//                gl = WebGLDebugUtils.makeDebugContext(gl);
+                gl = canvas.getContext("experimental-webgl", {antialias: false, preserveDrawingBuffer: true});
+//                gl = WebGLDebugUtils.makeDebugContext();
                 var getExt = gl.getExtension("OES_texture_float");//we use this for float textures
                 gl.clearColor(0.0, 0.0, 0.0, 0.0);
                 gl.enable(gl.DEPTH_TEST);
@@ -2779,18 +2780,19 @@
                 throw {
                     name: "WebGLRendererError",
                     message: 'Could not create WebGL context'
-                }
+                };
             }
-            if (!gl) {
+            if (!this.gl) {
                 throw {
                     name: "WebGLRendererError",
                     message: "Could not initialise WebGL, sorry :-("
-                }
+                };
             }
         },
         initBuffers: function() {
             var gl = this.gl;
-            var atlasGeometry = this.atlasGeometry = new GLU.Geometry(gl);
+            var glu = this.glu;
+            var atlasGeometry = this.atlasGeometry = glu.Geometry();
 
             var blockSize = this.blockSize;
             var vertices = [];
@@ -2802,9 +2804,9 @@
                     0.0, 0.0,  0,
                     1.0,  1.0,  0,
                     0.0,  1.0,  0
-                )
+                );
             }
-            var vertexBuffer = new GLU.Buffer(gl, gl.ARRAY_BUFFER, gl.FLOAT, 3, gl.STATIC_DRAW);
+            var vertexBuffer = glu.Buffer(gl.ARRAY_BUFFER, gl.FLOAT, 3, gl.STATIC_DRAW);
             vertexBuffer.setArray(vertices);
             atlasGeometry.buffers.aVertexPosition = vertexBuffer;
 
@@ -2821,7 +2823,7 @@
                     0.0, subTexSize
                 );
             }
-            var texBuffer = new GLU.Buffer(gl, gl.ARRAY_BUFFER, gl.FLOAT, 2, gl.STATIC_DRAW);
+            var texBuffer = glu.Buffer(gl.ARRAY_BUFFER, gl.FLOAT, 2, gl.STATIC_DRAW);
             texBuffer.setArray(textureCoords);
             atlasGeometry.buffers.aTextureCoord = texBuffer;
 
@@ -2830,9 +2832,9 @@
             for(var i = 0; i < blockSize; ++i){
                 for(var j = 0; j < 6; ++j){
                     ids.push(i/blockSize);
-                };
+                }
             }
-            var idBuffer = new GLU.Buffer(gl, gl.ARRAY_BUFFER, gl.FLOAT, 1, gl.STATIC_DRAW);
+            var idBuffer = glu.Buffer(gl.ARRAY_BUFFER, gl.FLOAT, 1, gl.STATIC_DRAW);
             idBuffer.setArray(ids);
             atlasGeometry.buffers.aID = idBuffer;
 
@@ -2842,7 +2844,7 @@
                 var j = i*6;
                 indices.push(j+0, j+1, j+2, j+3, j+4, j+5);
             }
-            var indexBuffer = new GLU.Buffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, 1, gl.STATIC_DRAW);
+            var indexBuffer = glu.Buffer(gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, 1, gl.STATIC_DRAW);
             indexBuffer.setArray(indices);
             atlasGeometry.indices = indexBuffer;
 
@@ -2864,7 +2866,7 @@
                 atlas.push(texW, texH, 1/texW, 1/texH);
             }
             var atlasDataArray = new Float32Array(atlas);
-            var atlasDataTexture = this.atlasDataTexture = new GLU.Texture(gl);
+            var atlasDataTexture = this.atlasDataTexture = glu.Texture();
             atlasDataTexture.array = atlasDataArray;
             atlasDataTexture.width = numTextures;
             atlasDataTexture.height = 2;
@@ -2879,7 +2881,7 @@
                 drawCommands.push(0, 0, 0, 0);
             }
             var drawCommandsArray = new Float32Array(drawCommands);
-            var drawCommandsTexture = this.drawCommandsTexture = new GLU.Texture(gl);
+            var drawCommandsTexture = this.drawCommandsTexture = glu.Texture();
             drawCommandsTexture.array = drawCommandsArray;
             drawCommandsTexture.width = blockSize;
             drawCommandsTexture.height = 2;
@@ -2907,10 +2909,12 @@
             colorArray[3] = sa/255;
         },
         initCopyPlane: function(){
-            var geom = new GLU.Geometry(this.gl);
+            var glu = this.glu;
+            var gl = this.gl;
+            var geom = glu.Geometry();
             geom.makeRect(1, 1);
 
-            var vertexBuffer = new GLU.Buffer(this.gl, this.gl.ARRAY_BUFFER, this.gl.FLOAT, 3, this.gl.STATIC_DRAW);
+            var vertexBuffer = glu.Buffer(gl.ARRAY_BUFFER, gl.FLOAT, 3, gl.STATIC_DRAW);
             var vertexArray = [
                 0, 0, 0,
                 1, 0, 0,
@@ -2921,7 +2925,7 @@
             vertexBuffer.array = vertexArray;
             geom.buffers.aVertexPosition = vertexBuffer;
 
-            var texBuffer = new GLU.Buffer(this.gl, this.gl.ARRAY_BUFFER, this.gl.FLOAT, 2, this.gl.STATIC_DRAW);
+            var texBuffer = glu.Buffer(gl.ARRAY_BUFFER, gl.FLOAT, 2, gl.STATIC_DRAW);
             var texArray = [
                 0.0, 0.0,
                 1.0, 0.0,
@@ -2932,7 +2936,7 @@
             texBuffer.array = texArray;
             geom.buffers.aTextureCoord = texBuffer;
 
-            var indexBuffer = new GLU.Buffer(this.gl, this.gl.ELEMENT_ARRAY_BUFFER, this.gl.UNSIGNED_SHORT, 1, this.gl.STATIC_DRAW);
+            var indexBuffer = glu.Buffer(gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, 1, gl.STATIC_DRAW);
             var indexArray = [
                 0, 1, 2,
                 0, 2, 3
@@ -2974,7 +2978,7 @@
             this.mvMatrixStack.push(copy);
         },
         mvPopMatrix: function () {
-            if (this.mvMatrixStack.length == 0) {
+            if (this.mvMatrixStack.length === 0) {
                 throw "Invalid popMatrix!";
             }
             this.mvMatrixPool.push(this.mvMatrix);
@@ -3180,7 +3184,7 @@
             }
          },
         handleSetDrawTarget: function(target){
-            if(target !== this._currentDrawTarget){
+            if(target != this._currentDrawTarget){
                 //draw target has changed!
 
                 if(this._currentDrawTarget != null){
@@ -3219,7 +3223,7 @@
             this.setupViewPort();
         },
         handleClear: function(){
-            if(this._currentDrawTarget != null){
+            if(this._currentDrawTarget !== null){
                 this.gl.clearColor(0, 0, 0, 0);
             } else {
                 var c = this.bgColor;
@@ -3268,7 +3272,7 @@
 //                this.clearCommandQueue();
 //                return;
 //            }
-            if(this.atlasTexture.width == 0){
+            if(this.atlasTexture.width === 0){
                 //don't draw until the texture is loaded!
                 return;
             }
@@ -3338,7 +3342,7 @@
                 if(onComplete){
                     onComplete(image);
                 }
-            }
+            };
             this.imageCache.loadSubImage(image, url, rectangle, loaded);
             return image;
         },
@@ -3489,7 +3493,7 @@
 //                console.log('trying to insert into children');
                 var newNode = this.childA.insert(img) || this.childB.insert(img);
                 return newNode;
-            } else if(this.image != null){
+            } else if(this.image !== null){
 //                console.log('we already have an image');
                 return null;
             }
@@ -3537,7 +3541,7 @@
             if(this.childA){
                 result = result.concat(this.childA.getImageNodes());
                 result = result.concat(this.childB.getImageNodes());
-            } else if(this.image != null){
+            } else if(this.image !== null){
                 result.push(this);
             }
             return result;
@@ -3662,7 +3666,7 @@
         },
         sortFunctionWidthHeight: function(b, a){
             var dw = (a.getWidth()) - (b.getWidth());
-            if(dw == 0){
+            if(dw === 0){
                 return a.getHeight() - b.getHeight();
             } else {
                 return dw;
